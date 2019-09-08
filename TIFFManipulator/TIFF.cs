@@ -65,6 +65,13 @@ namespace TIFFManipulator
     {
         private ImageFileHeader _ifh;
         public List<ImageFileDirectory> ImageFileDirectories = new List<ImageFileDirectory>();
+        public bool IsLittleEndian
+        {
+            get
+            {
+                return _ifh.IsLittleEndian;
+            }
+        }
 
         public static async Task<TIFF> LoadFromStream(Stream stream)
         {
