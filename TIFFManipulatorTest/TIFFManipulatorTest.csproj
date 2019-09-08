@@ -16,4 +16,10 @@
     <ProjectReference Include="..\TIFFManipulator\TIFFManipulator.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="inui.tif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
