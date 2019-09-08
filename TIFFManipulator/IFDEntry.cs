@@ -51,24 +51,24 @@ namespace TIFFManipulator
 
         public UInt16 Tag;
         public FieldTypeEnum FieldType;
-        public UInt16 Count;
+        public UInt32 Count;
 
         public UInt32 ValueOffset;
 
-        protected static int GetValuesLength(FieldTypeEnum fieldType, UInt16 count)
+        protected static UInt32 GetValuesLength(FieldTypeEnum fieldType, UInt32 count)
         {
             if (ValueLengths.ContainsKey(fieldType))
             {
-                return ValueLengths[fieldType] * count;
+                return (UInt32)ValueLengths[fieldType] * count;
             }
             switch (fieldType)
             {
                 case FieldTypeEnum.ASCII:
                     return count;
                 case FieldTypeEnum.RATIONAL:
-                    return ValueLengths[FieldTypeEnum.LONG] * 2 * count;
+                    return (UInt32)ValueLengths[FieldTypeEnum.LONG] * 2 * count;
                 case FieldTypeEnum.SRATIONAL:
-                    return ValueLengths[FieldTypeEnum.SLONG] * 2 * count;
+                    return (UInt32)ValueLengths[FieldTypeEnum.SLONG] * 2 * count;
                 case FieldTypeEnum.UNDEFINED:
                     return count;
                 default:
@@ -82,7 +82,7 @@ namespace TIFFManipulator
 
             var tag = await binaryReader.ReadUInt16Async();
             var fieldType = (FieldTypeEnum)await binaryReader.ReadUInt16Async();
-            var count = await binaryReader.ReadUInt16Async();
+            var count = await binaryReader.ReadUInt32Async();
             var offset = 0U;
 
             var valueLength = GetValuesLength(fieldType, count);
