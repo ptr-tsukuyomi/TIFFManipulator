@@ -78,6 +78,8 @@ namespace TIFFManipulator
 
         public static async Task<IFDEntry> LoadFromStream(Stream stream, bool isLittleEndian)
         {
+            var entryBegin = stream.Position;
+
             var binaryReader = new BinaryTools.BinaryReader(stream, isLittleEndian);
 
             var tag = await binaryReader.ReadUInt16Async();
@@ -193,8 +195,9 @@ namespace TIFFManipulator
                         if (read != data.Length) throw new Exception("Can not read enough data.");
 
                         var all = System.Text.Encoding.ASCII.GetString(data, 0, data.Length);
+                        var strings = all.Split(new char[] { '\0' });
 
-                        (ifdEntry as ASCIIEntry).Values = all.Split(new char[] { '\0' });
+                        (ifdEntry as ASCIIEntry).Values = strings.Take(strings.Length - 1).ToArray();
                     }
                     break;
                 case FieldTypeEnum.UNDEFINED:
@@ -243,6 +246,8 @@ namespace TIFFManipulator
                 default:
                     throw new Exception("Specified fieldType is not defined in TIFF 6.0 and not supported.");
             }
+
+            stream.Position = entryBegin + 12;
 
             ifdEntry.Tag = tag;
             ifdEntry.FieldType = fieldType;
