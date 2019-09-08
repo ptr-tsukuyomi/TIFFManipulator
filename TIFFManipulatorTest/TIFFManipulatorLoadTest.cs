@@ -24,7 +24,40 @@ namespace TIFFManipulatorTest
                         Console.WriteLine("IFD entries: {0}", ifd.Count);
                         foreach(var e in ifd.IFDEntries)
                         {
-                            Console.WriteLine("\tTag: {0}, Type: {1}, Count: {2}", e.Tag, e.FieldType.ToString());
+                            Console.WriteLine("\tTag: {0}, Type: {1}, Count: {2}", e.Tag, e.FieldType.ToString(), e.Count);
+
+                            switch (e)
+                            {
+                                case TIFFManipulator.ASCIIEntry a:
+                                    foreach(var str in a.Values)
+                                    {
+                                        Console.WriteLine("\t\t{0}", str);
+                                    }
+                                    break;
+                                case TIFFManipulator.UNDEFINEDEntry u:
+                                    Console.Write("\t\t");
+                                    foreach (var b in u.Value)
+                                    {
+                                        Console.Write("{0:X2} ", b);
+                                    }
+                                    Console.WriteLine();
+                                    break;
+                                case TIFFManipulator.IntegerEntry i:
+                                    foreach(var v in i.IntegerValues)
+                                    {
+                                        Console.WriteLine("\t\t{0}", v);
+                                    }
+                                    break;
+                                case TIFFManipulator.NumberEntry n:
+                                    foreach(var v in n.RealNumberValues)
+                                    {
+                                        Console.WriteLine("\t\t{0}", v);
+                                    }
+                                    break;
+                                default:
+                                    Assert.Fail("Must be unreachable here!");
+                                    break;
+                            }
                         }
                     }
                 }
